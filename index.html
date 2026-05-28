@@ -1,0 +1,820 @@
+<!DOCTYPE html>
+<html lang="en-GB">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
+<meta name="theme-color" content="#1a1a17">
+<title>FallMap · paste your workflow · see the grift</title>
+<meta name="description" content="Paste your workflow. See what a £20k consultant would build you, and what it actually costs. Get the sovereign version instead. One HTML.">
+<link rel="manifest" href='data:application/manifest+json,{"name":"FallMap","short_name":"FallMap","start_url":".","display":"standalone","background_color":"#1a1a17","theme_color":"#e8a012","icons":[{"src":"data:image/svg+xml;utf8,<svg xmlns=%22http://www.w3.org/2000/svg%22 viewBox=%220 0 64 64%22><rect width=%2264%22 height=%2264%22 fill=%22%231a1a17%22/><path d=%22M16 16 L32 16 L32 32 L48 32 L48 48 L16 48 Z%22 fill=%22none%22 stroke=%22%23e8a012%22 stroke-width=%223%22/><circle cx=%2232%22 cy=%2232%22 r=%223%22 fill=%22%23e8a012%22/></svg>","sizes":"any","type":"image/svg+xml"}]}'>
+<link href="https://fonts.googleapis.com/css2?family=Syne:wght@600;700;800&display=swap" rel="stylesheet">
+<style>
+* { box-sizing: border-box; margin: 0; padding: 0; -webkit-tap-highlight-color: transparent; }
+:root {
+  --bg: #1a1a17;
+  --bg-2: #23231f;
+  --bg-3: #2d2d28;
+  --line: #3a3a33;
+  --text: #f5f1e8;
+  --muted: #948f80;
+  --gold: #e8a012;
+  --gold-dim: #b87d0d;
+  --green: #44aa44;
+  --red: #ff4444;
+  --r: 12px;
+}
+html, body { background: var(--bg); color: var(--text); font: 16px/1.5 system-ui, -apple-system, "Segoe UI", Roboto, sans-serif; min-height: 100dvh; -webkit-font-smoothing: antialiased; }
+body { padding-bottom: env(safe-area-inset-bottom); }
+h1, h2, h3 { font-family: 'Syne', system-ui, sans-serif; font-weight: 700; letter-spacing: -0.02em; }
+h1 { font-size: 28px; }
+h2 { font-size: 20px; }
+h3 { font-size: 14px; text-transform: uppercase; letter-spacing: 0.06em; color: var(--gold); }
+
+header { padding: 14px 16px; border-bottom: 1px solid var(--line); position: sticky; top: 0; background: var(--bg); z-index: 50; backdrop-filter: blur(8px); }
+.top { display: flex; align-items: center; justify-content: space-between; max-width: 1100px; margin: 0 auto; }
+.brand { display: flex; align-items: center; gap: 10px; }
+.brand-mark { width: 40px; height: 40px; background: var(--gold); border-radius: 8px; display: grid; place-items: center; }
+.brand-mark svg { width: 24px; height: 24px; }
+.brand-name { font-family: 'Syne'; font-weight: 800; font-size: 18px; }
+.brand-sub { color: var(--muted); font-size: 11px; letter-spacing: 0.06em; text-transform: uppercase; }
+.icon-btn { background: var(--bg-2); border: 1px solid var(--line); color: var(--text); padding: 8px 12px; border-radius: 8px; font-size: 13px; cursor: pointer; font-family: inherit; }
+
+main { padding: 24px 16px 60px; max-width: 1100px; margin: 0 auto; }
+
+.hero { text-align: left; padding: 16px 0 28px; }
+.hero h1 { font-size: 36px; line-height: 1.1; margin-bottom: 10px; }
+.hero h1 .accent { color: var(--gold); }
+.hero p { color: var(--muted); font-size: 17px; max-width: 720px; line-height: 1.5; }
+
+@media (max-width: 600px) {
+  .hero h1 { font-size: 28px; }
+  .hero p { font-size: 15px; }
+}
+
+.card { background: var(--bg-2); border: 1px solid var(--line); border-radius: var(--r); padding: 20px; margin-bottom: 18px; }
+.card-hd { display: flex; justify-content: space-between; align-items: center; margin-bottom: 14px; flex-wrap: wrap; gap: 8px; }
+
+.field { margin-bottom: 14px; }
+.field label { display: block; color: var(--muted); font-size: 12px; margin-bottom: 6px; text-transform: uppercase; letter-spacing: 0.06em; font-weight: 600; }
+.field input, .field textarea, .field select { width: 100%; background: var(--bg); border: 1px solid var(--line); color: var(--text); padding: 14px; border-radius: 8px; font-size: 15px; font-family: inherit; }
+.field input:focus, .field textarea:focus { outline: 2px solid var(--gold); outline-offset: -1px; }
+.field textarea { min-height: 120px; resize: vertical; line-height: 1.55; }
+
+.btn { background: var(--gold); color: #1a1a17; border: none; padding: 16px 24px; border-radius: 10px; font-size: 16px; font-weight: 700; cursor: pointer; touch-action: manipulation; font-family: inherit; width: 100%; }
+.btn:hover { background: var(--gold-dim); }
+.btn:active { transform: scale(0.98); }
+.btn.secondary { background: var(--bg-3); color: var(--text); border: 1px solid var(--line); }
+.btn.small { padding: 8px 14px; font-size: 13px; width: auto; }
+.btn-row { display: flex; gap: 10px; flex-wrap: wrap; }
+.btn-row .btn { flex: 1; min-width: 140px; }
+
+.preset-row { display: flex; gap: 8px; flex-wrap: wrap; margin-top: 8px; }
+.preset-chip { background: var(--bg-3); border: 1px solid var(--line); padding: 6px 12px; border-radius: 16px; font-size: 12px; color: var(--muted); cursor: pointer; font-family: inherit; }
+.preset-chip:hover { color: var(--gold); border-color: var(--gold); }
+
+/* ═══ COMPARISON COLUMNS ═══ */
+.compare-row { display: grid; grid-template-columns: 1fr 1fr; gap: 16px; margin-bottom: 18px; }
+@media (max-width: 720px) { .compare-row { grid-template-columns: 1fr; } }
+
+.col { background: var(--bg-2); border: 1px solid var(--line); border-radius: var(--r); padding: 18px; }
+.col.consultant { border-left: 4px solid var(--red); }
+.col.sovereign { border-left: 4px solid var(--green); }
+.col h2 { font-size: 18px; margin-bottom: 4px; }
+.col .col-sub { color: var(--muted); font-size: 12px; margin-bottom: 14px; }
+
+.step { background: var(--bg-3); border: 1px solid var(--line); border-radius: 8px; padding: 12px; margin-bottom: 10px; position: relative; }
+.step .step-num { position: absolute; top: 10px; right: 12px; color: var(--muted); font-size: 11px; font-family: 'Syne'; font-weight: 700; }
+.step .action { font-weight: 600; font-size: 14px; margin-bottom: 6px; padding-right: 20px; }
+.step .tool { color: var(--gold); font-size: 13px; margin-bottom: 4px; }
+.step .cost { color: var(--muted); font-size: 12px; }
+.step .cost .price { color: var(--red); font-weight: 600; }
+.col.sovereign .step .tool { color: var(--green); }
+.col.sovereign .step .cost .price { color: var(--green); }
+.step .fail { color: var(--red); font-size: 11px; font-style: italic; margin-top: 4px; opacity: 0.8; }
+
+.flow-arrow { display: flex; justify-content: center; color: var(--line); font-size: 18px; padding: 2px 0; }
+
+.col-total { margin-top: 14px; padding-top: 14px; border-top: 2px solid var(--line); }
+.col-total .row { display: flex; justify-content: space-between; padding: 4px 0; font-size: 13px; }
+.col-total .lbl { color: var(--muted); }
+.col-total .val { font-weight: 600; }
+.col-total .grand { font-family: 'Syne'; font-weight: 800; font-size: 22px; margin-top: 8px; padding-top: 8px; border-top: 1px solid var(--line); }
+.col.consultant .col-total .grand { color: var(--red); }
+.col.sovereign .col-total .grand { color: var(--green); }
+
+/* ═══ THE BILL ═══ */
+.bill { background: linear-gradient(135deg, var(--bg-2), var(--bg-3)); border: 2px solid var(--gold); border-radius: 14px; padding: 28px; margin: 24px 0; }
+.bill h2 { font-size: 22px; margin-bottom: 18px; text-align: center; }
+.bill-row { display: flex; justify-content: space-between; padding: 8px 0; font-size: 14px; border-bottom: 1px solid var(--line); }
+.bill-row:last-of-type { border-bottom: none; }
+.bill-row .lbl { color: var(--muted); }
+.bill-row .val { font-weight: 600; }
+.bill-row.total { padding-top: 14px; margin-top: 8px; border-top: 2px solid var(--gold); font-size: 16px; }
+.bill-row.total .val { color: var(--gold); font-family: 'Syne'; font-weight: 800; font-size: 20px; }
+
+.savings { text-align: center; padding: 32px 16px; margin: 20px 0; background: rgba(68, 170, 68, 0.08); border: 2px solid var(--green); border-radius: 16px; }
+.savings .lbl { color: var(--green); font-size: 13px; text-transform: uppercase; letter-spacing: 0.08em; font-weight: 700; margin-bottom: 8px; }
+.savings .num { font-family: 'Syne'; font-weight: 800; font-size: 72px; line-height: 1; color: var(--green); }
+.savings .sub { color: var(--muted); font-size: 14px; margin-top: 8px; }
+@media (max-width: 480px) { .savings .num { font-size: 48px; } }
+
+.toast { position: fixed; bottom: 80px; left: 50%; transform: translateX(-50%); background: var(--gold); color: #1a1a17; padding: 10px 20px; border-radius: 24px; font-weight: 700; z-index: 200; opacity: 0; transition: opacity 0.2s, transform 0.2s; pointer-events: none; }
+.toast.show { opacity: 1; transform: translateX(-50%) translateY(-10px); }
+
+.modal-bg { position: fixed; inset: 0; background: rgba(0,0,0,0.85); z-index: 100; display: none; align-items: flex-end; }
+.modal-bg.open { display: flex; }
+.modal { background: var(--bg-2); width: 100%; max-width: 720px; margin: 0 auto; border-radius: 16px 16px 0 0; padding: 22px; max-height: 90vh; overflow-y: auto; padding-bottom: calc(22px + env(safe-area-inset-bottom)); }
+.modal-hd { display: flex; justify-content: space-between; align-items: center; margin-bottom: 16px; }
+.modal-close { background: none; border: none; color: var(--muted); font-size: 28px; cursor: pointer; padding: 0 8px; line-height: 1; }
+
+.tier-badge { display: inline-block; padding: 3px 8px; border-radius: 6px; font-size: 11px; background: var(--bg-3); color: var(--muted); margin-left: 8px; }
+.tier-badge.t3 { background: rgba(232,160,18,0.15); color: var(--gold); }
+
+footer { text-align: center; padding: 24px 16px 40px; color: var(--muted); font-size: 12px; }
+footer a { color: var(--gold); text-decoration: none; }
+
+.empty { text-align: center; padding: 36px 20px; color: var(--muted); }
+.empty .icon { font-size: 36px; opacity: 0.4; margin-bottom: 8px; }
+
+.cta-row { display: flex; gap: 10px; flex-wrap: wrap; margin-top: 18px; }
+.cta-row .btn { flex: 1; min-width: 160px; }
+
+.detail-line { font-size: 12px; color: var(--muted); margin-top: 8px; padding-top: 8px; border-top: 1px solid var(--line); }
+</style>
+</head>
+<body>
+
+<header>
+  <div class="top">
+    <div class="brand">
+      <div class="brand-mark">
+        <svg viewBox="0 0 24 24" fill="none" stroke="#1a1a17" stroke-width="2.5">
+          <path d="M4 4 L12 4 L12 12 L20 12 L20 20 L4 20 Z"/>
+          <circle cx="12" cy="12" r="1.5" fill="#1a1a17"/>
+        </svg>
+      </div>
+      <div>
+        <div class="brand-name">FallMap</div>
+        <div class="brand-sub">the £20k arrow exposer</div>
+      </div>
+    </div>
+    <div style="display:flex;gap:6px">
+      <button class="icon-btn" id="btnTier">offline</button>
+      <button class="icon-btn" id="btnSettings">⚙</button>
+    </div>
+  </div>
+</header>
+
+<main>
+
+<div class="hero">
+  <h1>Paste your workflow.<br><span class="accent">See the grift.</span></h1>
+  <p>Describe what your business does. We'll show you what a £20k consultant would build, what it actually costs, and the sovereign version that does the same job for £0.</p>
+</div>
+
+<!-- INPUT -->
+<div class="card">
+  <div class="card-hd"><h2>1 · Your workflow</h2></div>
+  <div class="field">
+    <label>Describe your workflow in plain English</label>
+    <textarea id="wfInput" placeholder='e.g. "We get enquiries by email, qualify them, send a quote, follow up, close the deal, onboard the client, deliver the work, invoice, chase payment"'></textarea>
+  </div>
+  <div class="preset-row">
+    <span class="preset-chip" onclick="usePreset(0)">Consultancy workflow</span>
+    <span class="preset-chip" onclick="usePreset(1)">SaaS sales funnel</span>
+    <span class="preset-chip" onclick="usePreset(2)">Trades sole trader</span>
+    <span class="preset-chip" onclick="usePreset(3)">Legal practice</span>
+    <span class="preset-chip" onclick="usePreset(4)">Gym onboarding</span>
+  </div>
+  <div class="btn-row" style="margin-top:14px">
+    <button class="btn" onclick="mapWorkflow()">⇶ Map it</button>
+  </div>
+</div>
+
+<!-- COMPARISON · two columns -->
+<div id="comparison" style="display:none">
+  <div class="card-hd" style="margin-bottom:12px">
+    <h2>2 · The comparison</h2>
+    <span id="parserTier" class="tier-badge">T0</span>
+  </div>
+  <div class="compare-row">
+    <div class="col consultant">
+      <h2>What a £20k consultant builds you</h2>
+      <div class="col-sub">SaaS subscriptions + implementation + retainer + 6 logins + 6 data silos</div>
+      <div id="consultantSteps"></div>
+      <div class="col-total" id="consultantTotal"></div>
+    </div>
+    <div class="col sovereign">
+      <h2>What you could have instead</h2>
+      <div class="col-sub">Sovereign single-file tools · your data your device · no subscription</div>
+      <div id="sovereignSteps"></div>
+      <div class="col-total" id="sovereignTotal"></div>
+    </div>
+  </div>
+</div>
+
+<!-- THE BILL -->
+<div id="billBox" style="display:none">
+  <div class="bill">
+    <h2>3 · The bill</h2>
+    <div id="billBody"></div>
+  </div>
+
+  <div class="savings">
+    <div class="lbl">You just saved</div>
+    <div class="num" id="savingsAmount">£0</div>
+    <div class="sub" id="savingsSub">in year one alone</div>
+  </div>
+
+  <div class="cta-row">
+    <button class="btn" onclick="showCTA()">◊ Get the sovereign version</button>
+    <button class="btn secondary" onclick="exportReport()">📥 Download report</button>
+    <button class="btn secondary" onclick="shareSummary()">📤 Share summary</button>
+  </div>
+</div>
+
+<footer>
+  FallMap · ◊·κ=1 · single HTML · on-device · prime 241 · <a href="https://github.com/sjgant80-hub/fallmap" target="_blank">source</a>
+</footer>
+
+</main>
+
+<div class="modal-bg" id="modal">
+  <div class="modal">
+    <div class="modal-hd">
+      <h2 id="modalTitle">·</h2>
+      <button class="modal-close" onclick="closeModal()">×</button>
+    </div>
+    <div id="modalBody"></div>
+  </div>
+</div>
+
+<div class="toast" id="toast">·</div>
+
+<script>
+'use strict';
+
+// ═══════════════════════════════════════════
+// FallMap · workflow → consulting grift exposer
+// ◊·κ=1 · v19 · prime 241
+// ═══════════════════════════════════════════
+
+const VERSION = '1.0.0';
+const PRIME = 241;
+const STORE = 'fallmap-state';
+
+let state = {
+  saved: [],
+  settings: {
+    consultantRate: 'mid',   // low | mid | high | luxury
+    anthropicKey: '', openaiKey: '', geminiKey: '', openrouterKey: '',
+  },
+  meta: { created: Date.now(), version: VERSION },
+};
+
+async function saveState() { try { localStorage.setItem(STORE, JSON.stringify(state)); } catch (e) {} }
+async function loadState() { try { const raw = localStorage.getItem(STORE); if (raw) state = Object.assign(state, JSON.parse(raw)); } catch (e) {} }
+
+function toast(msg) {
+  const t = document.getElementById('toast');
+  t.textContent = msg;
+  t.classList.add('show');
+  clearTimeout(t._to);
+  t._to = setTimeout(() => t.classList.remove('show'), 1800);
+}
+function escHTML(s) { return String(s == null ? '' : s).replace(/[&<>"']/g, c => ({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c])); }
+const money = n => '£' + Math.round(+n || 0).toLocaleString('en-GB');
+
+// ═══ PRESETS ═══
+const PRESETS = [
+  'We get enquiries by email, qualify the lead, book a discovery call, send a proposal, follow up, close the deal, onboard the client, deliver the work in phases, invoice on milestones, chase late payment, and gather a testimonial.',
+  'Marketing drives traffic, leads sign up via a form, we send an email sequence, qualify them with a survey, book a demo, send a quote, close the deal, onboard them through a setup wizard, deliver the SaaS, support tickets come in, invoice monthly.',
+  'Customer calls or messages, I quote the job, agree the date, buy materials, do the work, take photos, send the invoice, chase payment, file the receipt for tax, log the mileage.',
+  'Client enquiry by phone or email, conflict check, initial consultation, send engagement letter, file open, research, draft, review, court appearance, send the bill, file closed.',
+  'Lead comes in via Instagram, free trial sign-up, intake form, first session booked, onboarding call, fitness assessment, programme assignment, weekly check-ins, monthly billing, renewals or cancellations.',
+];
+
+function usePreset(i) {
+  document.getElementById('wfInput').value = PRESETS[i] || '';
+  toast('Preset loaded');
+  document.getElementById('wfInput').focus();
+}
+
+// ═══════════════════════════════════════════
+// AGENT α · WORKFLOW PARSER
+// ═══════════════════════════════════════════
+// Splits text into steps and classifies by verb/intent
+const STEP_TYPES = {
+  intake:    { verbs: /\b(receive|get|capture|sign[- ]?up|enquir|inbound|incoming|lead|contact|form|messag)/i, label: 'intake' },
+  qualify:   { verbs: /\b(qualif|score|filter|screen|assess|vet|check|conflict)/i, label: 'qualify' },
+  schedule:  { verbs: /\b(book|schedule|call|meet|discover|demo|consult|appoint)/i, label: 'schedule' },
+  quote:     { verbs: /\b(quote|proposal|estimat|price|propos|engagement)/i, label: 'quote' },
+  follow:    { verbs: /\b(follow.?up|nurture|sequence|email|chase|reminder|drip)/i, label: 'follow' },
+  close:     { verbs: /\b(close|win|sign|agree|contract|deal|convert)/i, label: 'close' },
+  onboard:   { verbs: /\b(onboard|setup|kick.?off|wizard|welcome|intake.form|initial)/i, label: 'onboard' },
+  deliver:   { verbs: /\b(deliver|build|execut|complet|do the|provide|service|programme|session|appearance|draft|research)/i, label: 'deliver' },
+  invoice:   { verbs: /\b(invoice|bill|charge|collect|payment.request|milestone|monthly)/i, label: 'invoice' },
+  pay_chase: { verbs: /\b(chase|overdue|late.payment|remind.payment|collect.payment)/i, label: 'pay_chase' },
+  support:   { verbs: /\b(support|ticket|help|issue|complaint|service)/i, label: 'support' },
+  marketing: { verbs: /\b(marketing|advertise|content|traffic|seo|ads|instagram|linkedin|social)/i, label: 'marketing' },
+  inventory: { verbs: /\b(materials|stock|supplies|inventory|purchase.materials|buy)/i, label: 'inventory' },
+  logistics: { verbs: /\b(mileage|travel|drive|journey|expenses|receipt|photo)/i, label: 'logistics' },
+  feedback:  { verbs: /\b(testimonial|review|feedback|nps|case.study|gather)/i, label: 'feedback' },
+  renew:     { verbs: /\b(renew|cancel|churn|upgrade|downgrade)/i, label: 'renew' },
+};
+
+function classify(stepText) {
+  for (const [key, def] of Object.entries(STEP_TYPES)) {
+    if (def.verbs.test(stepText)) return key;
+  }
+  return 'deliver';
+}
+
+function parseWorkflow(text) {
+  // Split on common delimiters
+  const t = String(text || '').replace(/[.;]\s+/g, '|').replace(/\bthen\b/gi, '|').replace(/\b(and then|then we|we then)\b/gi, '|');
+  // also split on comma-separated lists
+  const chunks = t.split(/[,|]\s+/).map(s => s.trim()).filter(s => s.length > 4);
+  const steps = chunks.slice(0, 12).map((s, i) => ({
+    id: i + 1,
+    action: s.replace(/^(we |the |a )/i, '').replace(/[.!?]$/, '').slice(0, 80),
+    type: classify(s),
+  }));
+  return steps;
+}
+
+// ═══════════════════════════════════════════
+// SAAS DATABASE (built-in · T0 always works)
+// monthly £ prices · UK realistic
+// ═══════════════════════════════════════════
+const SAAS_DB = {
+  intake:    [{ name: 'HubSpot CRM Starter', mo: 45, fail: 'leads lost in Zapier silence' }, { name: 'Zapier email parser', mo: 20, fail: 'zap breaks · no alert' }],
+  qualify:   [{ name: 'HubSpot Pro (lead scoring)', mo: 90, fail: 'scoring model needs constant tuning' }, { name: 'Clearbit enrich', mo: 99, fail: 'enrichment misses 40% of UK SMEs' }],
+  schedule:  [{ name: 'Calendly Premium', mo: 16, fail: 'embed breaks on mobile · branded for them' }],
+  quote:     [{ name: 'PandaDoc', mo: 35, fail: 'template locked · PDF-only export' }, { name: 'Proposify', mo: 49, fail: 'no offline · login required' }],
+  follow:    [{ name: 'Mailchimp Essentials', mo: 13, fail: 'deliverability dips · gmail tab' }, { name: 'HubSpot sequences', mo: 0, note: 'included in Pro above', fail: 'sequence logic fragile' }],
+  close:     [{ name: 'DocuSign', mo: 25, fail: 'another login for the client' }],
+  onboard:   [{ name: 'Notion + Tally form', mo: 23, fail: 'two tools · no native flow' }, { name: 'Userflow', mo: 250, fail: 'overkill for SMEs · enterprise pricing' }],
+  deliver:   [{ name: 'Asana Premium', mo: 11, fail: 'work tracked outside the deliverable' }, { name: 'Notion teams', mo: 8, fail: 'page sprawl · search rots' }],
+  invoice:   [{ name: 'Xero Standard', mo: 36, fail: 'another data silo · MTD compliance gates premium' }, { name: 'QuickBooks Essentials', mo: 17, fail: 'support is offshore · features behind tiers' }],
+  pay_chase: [{ name: 'Chaser', mo: 75, fail: 'looks templated · clients ignore' }],
+  support:   [{ name: 'Intercom Essential', mo: 74, fail: 'per-seat scaling · price doubles at year 2' }, { name: 'Crisp Pro', mo: 25, fail: 'limited automation' }],
+  marketing: [{ name: 'Buffer + Canva Pro', mo: 30, fail: 'two more logins to forget' }, { name: 'Hootsuite Professional', mo: 79, fail: 'designed for big team · feels heavy for one person' }],
+  inventory: [{ name: 'Cin7 Core Standard', mo: 199, fail: 'enterprise-priced for SMEs' }],
+  logistics: [{ name: 'TripLog Premium', mo: 6, fail: 'limited integrations · vendor lock' }, { name: 'Expensify Collect', mo: 5, fail: 'per-user pricing scales fast' }],
+  feedback:  [{ name: 'Typeform Plus', mo: 50, fail: 'submission limits · upsells per quota' }, { name: 'Senja', mo: 24, fail: 'testimonials hosted on their domain' }],
+  renew:     [{ name: 'ChartMogul Start', mo: 100, fail: 'overkill for sub-100 customer counts' }],
+};
+
+// Consultant fee structure
+const CONSULTANT_RATES = {
+  low:     { discovery: 1500, mapping: 2000, implementation: 5000, training: 1500, retainer: 800 },
+  mid:     { discovery: 3000, mapping: 4000, implementation: 10000, training: 3000, retainer: 2000 },
+  high:    { discovery: 5000, mapping: 6000, implementation: 18000, training: 5000, retainer: 3500 },
+  luxury:  { discovery: 10000, mapping: 12000, implementation: 35000, training: 8000, retainer: 7500 },
+};
+
+function pickSaas(type) {
+  const list = SAAS_DB[type] || SAAS_DB.deliver;
+  return list[0];  // primary recommendation
+}
+
+function consultantTotal(steps, rateTier) {
+  const r = CONSULTANT_RATES[rateTier] || CONSULTANT_RATES.mid;
+  const oneOff = r.discovery + r.mapping + r.implementation + r.training;
+  const monthlySaas = steps.reduce((s, st) => {
+    const saas = pickSaas(st.type);
+    return s + (saas ? saas.mo : 0);
+  }, 0);
+  return {
+    oneOff,
+    monthlySaas,
+    yearlySaas: monthlySaas * 12,
+    retainerMonthly: r.retainer,
+    retainerYearly: r.retainer * 12,
+    year1: oneOff + (monthlySaas * 12) + (r.retainer * 12),
+    yearN: (monthlySaas * 12) + (r.retainer * 12),
+    breakdown: r,
+  };
+}
+
+// ═══════════════════════════════════════════
+// SOVEREIGN MAPPING (agent δ)
+// ═══════════════════════════════════════════
+const SOVEREIGN_DB = {
+  intake:    { tool: 'FallForce', url: 'sjgant80-hub.github.io/fallforce', why: 'intake agent captures enquiry · on-device' },
+  qualify:   { tool: 'FallForce', url: 'sjgant80-hub.github.io/fallforce', why: 'bloom routing scores lead automatically' },
+  schedule:  { tool: 'FallForce', url: 'sjgant80-hub.github.io/fallforce', why: 'calendar agent · iCal export · no third-party booking page' },
+  quote:     { tool: 'FallForce', url: 'sjgant80-hub.github.io/fallforce', why: 'quote agent drafts · print-to-PDF · no template lock' },
+  follow:    { tool: 'FallForce', url: 'sjgant80-hub.github.io/fallforce', why: 'sequence agent · timed reminders on your device' },
+  close:     { tool: 'FallForce', url: 'sjgant80-hub.github.io/fallforce', why: 'engagement letter agent · plain markdown export' },
+  onboard:   { tool: 'GymOS · FallForce', url: 'sjgant80-hub.github.io/gymos', why: 'onboarding flow with phase gates · on-device' },
+  deliver:   { tool: 'FallForce + Forge output', url: 'sjgant80-hub.github.io/fallforce', why: 'domain-specific agents · sovereign HTML' },
+  invoice:   { tool: 'FallAccount Trades', url: 'sjgant80-hub.github.io/fallaccount-trades', why: 'invoice agent generates · tracks paid/unpaid · MTD ready' },
+  pay_chase: { tool: 'FallAccount Trades', url: 'sjgant80-hub.github.io/fallaccount-trades', why: 'overdue insights auto-detect · no third tool to chase' },
+  support:   { tool: 'FallForce', url: 'sjgant80-hub.github.io/fallforce', why: 'support tickets as records · same single file' },
+  marketing: { tool: 'FallGravity', url: 'sjgant80-hub.github.io/fallgravity', why: 'LinkedIn algo strategy · post scorer · 90-min boost window' },
+  inventory: { tool: 'Forge custom', url: 'sjgant80-hub.github.io/forge-prime', why: 'forge a domain-specific inventory agent · one HTML' },
+  logistics: { tool: 'FallAccount Trades', url: 'sjgant80-hub.github.io/fallaccount-trades', why: 'mileage logger · HMRC auto-calc · 45p/25p built-in' },
+  feedback:  { tool: 'FallForce', url: 'sjgant80-hub.github.io/fallforce', why: 'testimonial collection · stays on your device' },
+  renew:     { tool: 'FallForce', url: 'sjgant80-hub.github.io/fallforce', why: 'renewal calendar agent · alerts on your device' },
+};
+
+function pickSovereign(type) {
+  return SOVEREIGN_DB[type] || SOVEREIGN_DB.deliver;
+}
+
+// ═══════════════════════════════════════════
+// CASCADE · same shim across estate
+// ═══════════════════════════════════════════
+const Cascade = {
+  async detectTier() {
+    if (await Cascade._probeLocal()) return 'T2';
+    const s = state.settings;
+    if (s.anthropicKey || s.openaiKey || s.geminiKey || s.openrouterKey) return 'T3';
+    return 'T0';
+  },
+  async _probeLocal() {
+    if (Cascade._localProbed !== undefined) return Cascade._localProbed;
+    try {
+      const r = await Promise.race([
+        fetch('http://127.0.0.1:11434/api/tags').then(r => r.ok),
+        new Promise(res => setTimeout(() => res(false), 400)),
+      ]);
+      Cascade._localProbed = !!r;
+    } catch (e) { Cascade._localProbed = false; }
+    return Cascade._localProbed;
+  },
+  async generate(prompt) {
+    const s = state.settings;
+    if (s.anthropicKey) try {
+      const r = await fetch('https://api.anthropic.com/v1/messages', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json', 'x-api-key': s.anthropicKey, 'anthropic-version': '2023-06-01', 'anthropic-dangerous-direct-browser-access': 'true' },
+        body: JSON.stringify({ model: 'claude-haiku-4-5', max_tokens: 1200, messages: [{ role: 'user', content: prompt }] })
+      });
+      const d = await r.json();
+      return { tier: 'T3·Claude', text: d?.content?.[0]?.text || '' };
+    } catch (e) {}
+    if (s.openaiKey) try {
+      const r = await fetch('https://api.openai.com/v1/chat/completions', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json', 'Authorization': 'Bearer ' + s.openaiKey },
+        body: JSON.stringify({ model: 'gpt-4o-mini', messages: [{ role: 'user', content: prompt }] })
+      });
+      const d = await r.json();
+      return { tier: 'T3·GPT', text: d?.choices?.[0]?.message?.content || '' };
+    } catch (e) {}
+    if (s.geminiKey) try {
+      const r = await fetch(`https://generativelanguage.googleapis.com/v1beta/models/gemini-2.0-flash:generateContent?key=${s.geminiKey}`, {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ contents: [{ parts: [{ text: prompt }] }] })
+      });
+      const d = await r.json();
+      return { tier: 'T3·Gemini', text: d?.candidates?.[0]?.content?.parts?.[0]?.text || '' };
+    } catch (e) {}
+    if (s.openrouterKey) try {
+      const r = await fetch('https://openrouter.ai/api/v1/chat/completions', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json', 'Authorization': 'Bearer ' + s.openrouterKey, 'HTTP-Referer': location.origin },
+        body: JSON.stringify({ model: 'anthropic/claude-haiku-4-5', messages: [{ role: 'user', content: prompt }] })
+      });
+      const d = await r.json();
+      return { tier: 'T3·OpenRouter', text: d?.choices?.[0]?.message?.content || '' };
+    } catch (e) {}
+    if (await Cascade._probeLocal()) try {
+      const r = await fetch('http://127.0.0.1:11434/api/generate', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ model: 'llama3.2', prompt, stream: false })
+      });
+      const d = await r.json();
+      return { tier: 'T2·local', text: d?.response || '' };
+    } catch (e) {}
+    return { tier: 'T0', text: null };
+  },
+};
+
+// ═══════════════════════════════════════════
+// MAP IT · main flow
+// ═══════════════════════════════════════════
+let currentMap = null;
+
+async function mapWorkflow() {
+  const text = document.getElementById('wfInput').value.trim();
+  if (!text) { toast('Paste a workflow first'); return; }
+
+  toast('Mapping...');
+  let steps = parseWorkflow(text);
+
+  // T3 enhancement · sharper parsing if available
+  const tier = await Cascade.detectTier();
+  document.getElementById('parserTier').textContent = tier === 'T0' ? 'T0 · built-in rules' : tier;
+  if (tier !== 'T0') {
+    document.getElementById('parserTier').classList.add('t3');
+    try {
+      const prompt = `Parse this business workflow into discrete sequential steps. Each step gets ONE classification from this list:
+intake · qualify · schedule · quote · follow · close · onboard · deliver · invoice · pay_chase · support · marketing · inventory · logistics · feedback · renew
+
+Workflow:
+${text}
+
+Reply ONLY as JSON array, max 12 steps:
+[{"id":1,"action":"short action label","type":"intake"},...]`;
+      const r = await Cascade.generate(prompt);
+      if (r.text) {
+        const json = r.text.match(/\[[\s\S]*\]/)?.[0];
+        if (json) {
+          const arr = JSON.parse(json);
+          if (Array.isArray(arr) && arr.length) steps = arr.slice(0, 12);
+        }
+      }
+    } catch (e) { /* use T0 */ }
+  }
+
+  if (!steps.length) { toast('Couldn\'t parse · try more detail'); return; }
+
+  currentMap = { steps, ts: Date.now(), text };
+  renderComparison(steps);
+  document.getElementById('comparison').style.display = 'block';
+  document.getElementById('billBox').style.display = 'block';
+  setTimeout(() => document.getElementById('comparison').scrollIntoView({ behavior: 'smooth', block: 'start' }), 200);
+}
+
+function renderComparison(steps) {
+  // CONSULTANT column
+  const consultantHTML = steps.map((s, i) => {
+    const saas = pickSaas(s.type);
+    const lastIdx = i === steps.length - 1;
+    return `<div class="step">
+      <div class="step-num">${i + 1}</div>
+      <div class="action">${escHTML(s.action)}</div>
+      <div class="tool">→ ${escHTML(saas.name)}</div>
+      <div class="cost">${saas.mo ? `<span class="price">£${saas.mo}/mo</span>` : 'included above'}</div>
+      ${saas.fail ? `<div class="fail">⚠ ${escHTML(saas.fail)}</div>` : ''}
+    </div>${lastIdx ? '' : '<div class="flow-arrow">↓</div>'}`;
+  }).join('');
+  document.getElementById('consultantSteps').innerHTML = consultantHTML;
+
+  // SOVEREIGN column
+  const sovereignHTML = steps.map((s, i) => {
+    const sov = pickSovereign(s.type);
+    const lastIdx = i === steps.length - 1;
+    return `<div class="step">
+      <div class="step-num">${i + 1}</div>
+      <div class="action">${escHTML(s.action)}</div>
+      <div class="tool">→ ${escHTML(sov.tool)}</div>
+      <div class="cost"><span class="price">£0/mo</span> · ${escHTML(sov.why)}</div>
+    </div>${lastIdx ? '' : '<div class="flow-arrow">↓</div>'}`;
+  }).join('');
+  document.getElementById('sovereignSteps').innerHTML = sovereignHTML;
+
+  // TOTALS
+  const c = consultantTotal(steps, state.settings.consultantRate);
+  document.getElementById('consultantTotal').innerHTML = `
+    <div class="row"><span class="lbl">One-off (discovery + mapping + impl + training)</span><span class="val">${money(c.oneOff)}</span></div>
+    <div class="row"><span class="lbl">SaaS · ${money(c.monthlySaas)}/mo × 12</span><span class="val">${money(c.yearlySaas)}</span></div>
+    <div class="row"><span class="lbl">Retainer · ${money(c.retainerMonthly)}/mo × 12</span><span class="val">${money(c.retainerYearly)}</span></div>
+    <div class="row grand"><span>Year 1 total</span><span>${money(c.year1)}</span></div>
+    <div class="row" style="margin-top:6px"><span class="lbl">Year 2+ ongoing</span><span class="val">${money(c.yearN)}/yr</span></div>
+  `;
+  // unique tools count
+  const uniqueTools = new Set(steps.map(s => pickSaas(s.type).name)).size;
+  const uniqueSovereign = new Set(steps.map(s => pickSovereign(s.type).tool)).size;
+
+  document.getElementById('sovereignTotal').innerHTML = `
+    <div class="row"><span class="lbl">Tools needed (sovereign)</span><span class="val">${uniqueSovereign} HTML file${uniqueSovereign === 1 ? '' : 's'}</span></div>
+    <div class="row"><span class="lbl">Monthly cost</span><span class="val">£0</span></div>
+    <div class="row"><span class="lbl">Optional brand & config (once)</span><span class="val">£997 – £5,000</span></div>
+    <div class="row grand"><span>Year 1 maximum</span><span>${money(5000)}</span></div>
+    <div class="row" style="margin-top:6px"><span class="lbl">Year 2+ ongoing</span><span class="val">£0</span></div>
+  `;
+
+  // THE BILL
+  renderBill(steps, c, uniqueTools, uniqueSovereign);
+}
+
+function renderBill(steps, c, uniqueTools, uniqueSovereign) {
+  const r = c.breakdown;
+  const saasLines = steps.map(s => {
+    const saas = pickSaas(s.type);
+    if (!saas.mo) return null;
+    return `<div class="bill-row"><span class="lbl">${escHTML(saas.name)} · £${saas.mo}/mo × 12</span><span class="val">${money(saas.mo * 12)}</span></div>`;
+  }).filter(Boolean).join('');
+
+  document.getElementById('billBody').innerHTML = `
+    <h3 style="color:var(--red);margin-bottom:10px">Consulting bill (year 1)</h3>
+    <div class="bill-row"><span class="lbl">Discovery workshop</span><span class="val">${money(r.discovery)}</span></div>
+    <div class="bill-row"><span class="lbl">Workflow mapping</span><span class="val">${money(r.mapping)}</span></div>
+    <div class="bill-row"><span class="lbl">Implementation</span><span class="val">${money(r.implementation)}</span></div>
+    <div class="bill-row"><span class="lbl">Training</span><span class="val">${money(r.training)}</span></div>
+    <div class="bill-row"><span class="lbl">Consultant total (one-off)</span><span class="val">${money(c.oneOff)}</span></div>
+    <div style="height:8px"></div>
+    ${saasLines}
+    <div class="bill-row"><span class="lbl">SaaS total year 1 (${steps.length} tools)</span><span class="val">${money(c.yearlySaas)}</span></div>
+    <div style="height:8px"></div>
+    <div class="bill-row"><span class="lbl">Retainer · ${money(r.retainer)}/mo × 12</span><span class="val">${money(c.retainerYearly)}</span></div>
+    <div class="bill-row total"><span class="lbl">YEAR 1 TOTAL</span><span class="val">${money(c.year1)}</span></div>
+    <div class="bill-row"><span class="lbl">YEAR 2+ (ongoing)</span><span class="val">${money(c.yearN)}/yr</span></div>
+
+    <h3 style="color:var(--green);margin:18px 0 10px">Sovereign alternative</h3>
+    <div class="bill-row"><span class="lbl">${uniqueSovereign} sovereign tool${uniqueSovereign === 1 ? '' : 's'} · already exist</span><span class="val">£0</span></div>
+    <div class="bill-row"><span class="lbl">Optional brand & config (once)</span><span class="val">£997 – £5,000</span></div>
+    <div class="bill-row"><span class="lbl">Monthly</span><span class="val">£0</span></div>
+    <div class="bill-row total"><span class="lbl">YEAR 1 MAXIMUM</span><span class="val">£5,000</span></div>
+    <div class="bill-row"><span class="lbl">YEAR 2+ (ongoing)</span><span class="val">£0</span></div>
+
+    <div class="detail-line">
+      Consultant route locks you to <b style="color:var(--red)">${uniqueTools}</b> different platforms · <b style="color:var(--red)">${uniqueTools}</b> logins · <b style="color:var(--red)">${uniqueTools}</b> data silos. Sovereign route: <b style="color:var(--green)">${uniqueSovereign}</b> file${uniqueSovereign === 1 ? '' : 's'} · your data your device · forever.
+    </div>
+  `;
+
+  // SAVINGS
+  const savings = c.year1 - 5000;
+  document.getElementById('savingsAmount').textContent = money(savings);
+  document.getElementById('savingsSub').textContent = `in year one alone · then ${money(c.yearN)}/year ongoing for as long as you stay`;
+}
+
+// ═══════════════════════════════════════════
+// EXPORT / SHARE
+// ═══════════════════════════════════════════
+function exportReport() {
+  if (!currentMap) return;
+  const c = consultantTotal(currentMap.steps, state.settings.consultantRate);
+  const lines = [
+    `FallMap Report · ${new Date().toISOString().slice(0,10)}`,
+    '═══════════════════════════════════════',
+    '',
+    'YOUR WORKFLOW:',
+    currentMap.text,
+    '',
+    'PARSED STEPS:',
+    ...currentMap.steps.map((s, i) => `${i + 1}. ${s.action}  [${s.type}]`),
+    '',
+    'WHAT A £20K CONSULTANT BUILDS YOU:',
+    ...currentMap.steps.map((s, i) => {
+      const saas = pickSaas(s.type);
+      return `${i + 1}. ${s.action} → ${saas.name} · £${saas.mo}/mo · ⚠ ${saas.fail || '(no warning)'}`;
+    }),
+    '',
+    `Consultant one-off: ${money(c.oneOff)}`,
+    `SaaS year 1: ${money(c.yearlySaas)}`,
+    `Retainer year 1: ${money(c.retainerYearly)}`,
+    `YEAR 1 TOTAL: ${money(c.year1)}`,
+    `YEAR 2+: ${money(c.yearN)}/yr`,
+    '',
+    'WHAT YOU COULD HAVE INSTEAD:',
+    ...currentMap.steps.map((s, i) => {
+      const sov = pickSovereign(s.type);
+      return `${i + 1}. ${s.action} → ${sov.tool} · ${sov.why}`;
+    }),
+    '',
+    `Sovereign one-time max: £5,000 (brand + config · optional)`,
+    `Sovereign ongoing: £0`,
+    '',
+    `YOU SAVE ${money(c.year1 - 5000)} IN YEAR ONE`,
+    `THEN ${money(c.yearN)}/YEAR ONGOING`,
+    '',
+    'Generated by FallMap · sjgant80-hub.github.io/fallmap',
+    '◊·κ=1 · sovereign · single HTML · on-device',
+  ].join('\n');
+  const blob = new Blob([lines], { type: 'text/plain' });
+  const a = document.createElement('a');
+  a.href = URL.createObjectURL(blob);
+  a.download = `fallmap-report-${new Date().toISOString().slice(0,10)}.txt`;
+  a.click();
+  setTimeout(() => URL.revokeObjectURL(a.href), 1000);
+  toast('Report downloaded');
+}
+
+function shareSummary() {
+  if (!currentMap) return;
+  const c = consultantTotal(currentMap.steps, state.settings.consultantRate);
+  const text = `Just mapped my workflow.
+
+A consultant would build it with ${currentMap.steps.length} SaaS subscriptions across ${new Set(currentMap.steps.map(s => pickSaas(s.type).name)).size} platforms.
+
+Year 1: ${money(c.year1)}
+Year 2+: ${money(c.yearN)}/yr ongoing
+
+The sovereign alternative: same workflow, ${new Set(currentMap.steps.map(s => pickSovereign(s.type).tool)).size} HTML files, £0/month, data stays on my device.
+
+Savings: ${money(c.year1 - 5000)} in year 1 alone.
+
+Try it: sjgant80-hub.github.io/fallmap
+
+#sovereigntools #saascalc`;
+  navigator.clipboard.writeText(text).then(() => toast('LinkedIn-ready text copied'));
+}
+
+function showCTA() {
+  showModal('Get the sovereign version', `
+    <div style="font-size:14px;line-height:1.6">
+      <p>Three ways to land your sovereign stack:</p>
+      <h3 style="color:var(--gold);margin:14px 0 6px">1 · DIY (free)</h3>
+      <p style="color:var(--muted);font-size:13px">Open each Fall* tool the map recommends. Brand them yourself via Settings. Use them. £0.</p>
+      <h3 style="color:var(--gold);margin:14px 0 6px">2 · Branded fork (£997)</h3>
+      <p style="color:var(--muted);font-size:13px">I fork each tool to your GitHub, brand it for your business, deliver the live URLs. Lite tier · 24h turnaround.</p>
+      <h3 style="color:var(--gold);margin:14px 0 6px">3 · Pro install (£2,500-£5,000)</h3>
+      <p style="color:var(--muted);font-size:13px">Custom agents tuned to your domain. Compliance configured. Multi-device sync. Training session. 1-week turnaround.</p>
+      <div style="margin-top:18px">
+        <a href="https://www.linkedin.com/in/simon-gant-295b56180/" target="_blank" class="btn" style="display:block;text-align:center;text-decoration:none">DM Simon on LinkedIn</a>
+        <p style="margin-top:10px;text-align:center;font-size:12px;color:var(--muted)">Or fork the master repos directly · all MIT licenced</p>
+      </div>
+    </div>
+  `);
+}
+
+// ═══════════════════════════════════════════
+// MODAL & SETTINGS
+// ═══════════════════════════════════════════
+function showModal(title, body) {
+  document.getElementById('modalTitle').textContent = title;
+  document.getElementById('modalBody').innerHTML = body;
+  document.getElementById('modal').classList.add('open');
+}
+function closeModal() { document.getElementById('modal').classList.remove('open'); }
+document.getElementById('modal').addEventListener('click', e => { if (e.target.id === 'modal') closeModal(); });
+
+document.getElementById('btnSettings').addEventListener('click', () => {
+  showModal('Settings', `
+    <div class="field">
+      <label>Consultant rate tier (for cost calc)</label>
+      <select id="stRate">
+        <option value="low" ${state.settings.consultantRate==='low'?'selected':''}>Low · indie / starter (one-off £10k, £800/mo retainer)</option>
+        <option value="mid" ${state.settings.consultantRate==='mid'?'selected':''}>Mid · established firm (one-off £20k, £2k/mo retainer)</option>
+        <option value="high" ${state.settings.consultantRate==='high'?'selected':''}>High · digital agency (one-off £34k, £3.5k/mo retainer)</option>
+        <option value="luxury" ${state.settings.consultantRate==='luxury'?'selected':''}>Luxury · Big 4 / boutique (one-off £65k, £7.5k/mo retainer)</option>
+      </select>
+    </div>
+
+    <h3 style="margin:18px 0 8px">AI keys (any one unlocks T3 smart parsing)</h3>
+    <p style="color:var(--muted);font-size:12px;margin-bottom:8px">Sharpens workflow parsing. <a href="https://aistudio.google.com/apikey" target="_blank" style="color:var(--gold)">Gemini is free</a>. Stays on this device.</p>
+    <div class="field"><label>Anthropic · Claude</label><input id="stAnthropic" type="password" value="${escHTML(state.settings.anthropicKey)}"></div>
+    <div class="field"><label>OpenAI · GPT</label><input id="stOpenAI" type="password" value="${escHTML(state.settings.openaiKey)}"></div>
+    <div class="field"><label>Gemini · free</label><input id="stGemini" type="password" value="${escHTML(state.settings.geminiKey)}"></div>
+    <div class="field"><label>OpenRouter</label><input id="stOpenRouter" type="password" value="${escHTML(state.settings.openrouterKey)}"></div>
+
+    <div style="margin-top:20px;text-align:center;color:var(--muted);font-size:11px">
+      FallMap · v${VERSION} · ◊·κ=1 · prime ${PRIME}<br>
+      arrows shouldn't cost £20,000
+    </div>
+    <div style="margin-top:14px"><button class="btn" onclick="saveSettings()">Save</button></div>
+  `);
+});
+
+async function saveSettings() {
+  state.settings.consultantRate = document.getElementById('stRate').value;
+  state.settings.anthropicKey = document.getElementById('stAnthropic').value;
+  state.settings.openaiKey = document.getElementById('stOpenAI').value;
+  state.settings.geminiKey = document.getElementById('stGemini').value;
+  state.settings.openrouterKey = document.getElementById('stOpenRouter').value;
+  Cascade._localProbed = undefined;
+  await saveState();
+  await updateTierBadge();
+  closeModal();
+  toast('Saved');
+  if (currentMap) renderComparison(currentMap.steps);
+}
+
+async function updateTierBadge() {
+  const tier = await Cascade.detectTier();
+  document.getElementById('btnTier').textContent = tier === 'T0' ? 'offline' : tier;
+}
+
+// ═══ KONOMI ═══
+window.KONOMI = { active: true, tier: 'sovereign', check: () => ({ ok: true, tier: 'sovereign' }) };
+
+// ═══ FALLMESH ═══
+try {
+  const sig = new BroadcastChannel('fall-signal');
+  sig.postMessage({ source: 'fallmap', type: 'hello', prime: PRIME, version: VERSION, ts: Date.now() });
+  sig.addEventListener('message', e => {
+    const m = e.data;
+    if (m && m.type === 'ping') sig.postMessage({ source: 'fallmap', type: 'pong', prime: PRIME });
+  });
+} catch (e) {}
+
+// ═══ postMessage API ═══
+window.addEventListener('message', async (e) => {
+  const m = e.data;
+  if (!m || m.target !== 'fallmap' || !m.action) return;
+  let resp = null;
+  if (m.action === 'ping') resp = { ok: true, prime: PRIME, version: VERSION };
+  else if (m.action === 'map' && m.workflow) {
+    const steps = parseWorkflow(m.workflow);
+    const c = consultantTotal(steps, m.rate || state.settings.consultantRate);
+    resp = { steps, consultant: c, savings: c.year1 - 5000 };
+  }
+  e.source?.postMessage({ target: m.source || '*', responseTo: m.action, data: resp }, '*');
+});
+
+// ═══ BOOT ═══
+(async function init() {
+  await loadState();
+  await updateTierBadge();
+})();
+</script>
+</body>
+</html>
