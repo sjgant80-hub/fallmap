@@ -1,6 +1,6 @@
 # fallmap
 
-> Paste your workflow · see what a £20k consultant builds · see the sovereign version that does the same for £0 · single HTML · on-device · prime 241 · sovereign single-file tool · MIT-licensed · Ed25519-signed · listed on FallMarket.
+> Paste your workflow · see what a £20k consultant builds · see the sovereign version that does the same for £0 · single HTML · on-device · sovereign single-file tool · MIT-licensed · Ed25519-signed · listed on FallMarket.
 
 fallmap is a sovereign tool built by the AI-Native Solutions guild. It runs on your machine, ships with source, and never phones home.
 
